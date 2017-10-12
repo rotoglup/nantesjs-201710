@@ -5,6 +5,7 @@ import React from "react";
 import {
   BlockQuote,
   Cite,
+  CodePane,
   Deck,
   Heading,
   Image,
@@ -143,6 +144,7 @@ export default class Presentation extends React.Component {
         <Slide transition={["fade"]} bgColor="primary">
           <Image src={images.logo_mgd.replace('/', '')} width="80%"/>
           <Heading size={3} textColor="secondary">Nicolas Lelong</Heading>
+          <CodePane lang='javascript' source='function toto() {}'></CodePane>
           <Mapboxgl flyTo={location_mgdesign}/>
         </Slide>
 
