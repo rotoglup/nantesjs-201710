@@ -6,9 +6,24 @@
   <title>Spectacle Boilerplate</title>
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/prism/1.3.0/themes/prism-tomorrow.css">
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 <body>
-  <div id="root"></div>
+  <div id="spectacle-root"></div>
+  <div id='map-pane-right'>
+    <div id='mbgl-map'></div>
+    <!--<iframe id='iframe-panel'></iframe>-->
+  </div>
+  <script>
+  mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+  var g_mbgl_map = new mapboxgl.Map({
+      container: 'mbgl-map', // container id
+      style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+      center: [-1.55, 47.216671],
+      zoom: 12
+  });
+  </script>
   <script src="https://cdn.jsdelivr.net/prism/1.3.0/prism.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/prism/1.3.0/components/prism-jsx.min.js" type="text/javascript"></script>
   <script src="./dist/bundle.js"></script>

@@ -3,4 +3,6 @@ import { render } from "react-dom";
 
 import Presentation from "./presentation";
 
-render(<Presentation/>, document.getElementById("root"));
+require('./index.css');
+
+render(<Presentation/>, document.getElementById("spectacle-root"));
