@@ -53,14 +53,30 @@ function showMapboxgl() {
   //document.getElementById('iframe-panel').src = 'http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/';
 }
 
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+
+let _g_dirty_globals = {
+  style: null
+};
+
 class Mapboxgl extends React.Component {
 
   componentWillMount() {
+    
     showMapboxgl();
+    
     if (this.props.flyTo) {
       g_mbgl_map.flyTo(this.props.flyTo);
     }
+    
     g_mbgl_map.showTileBoundaries = !!this.props.showTileBoundaries;
+
+    let style = this.props.style || style_default;
+    if (_g_dirty_globals.style != style) {            // NOTE(nico) pour éviter le repaint complet de la carte
+      _g_dirty_globals.style = style;
+      g_mbgl_map.setStyle(style);
+    }
   }
 
   render() {
@@ -84,6 +100,26 @@ const location_nantes = {
 const location_mgdesign = {
   center: [-1.556206, 47.20675],
   zoom: 15.0
+}
+
+const style_default = 'mapbox://styles/mapbox/streets-v9';
+
+const style_raster = {
+  "version": 8,
+  "sources": {
+    "raster-tiles": {
+        "type": "raster",
+        "url": "mapbox://mapbox.streets",
+        "tileSize": 256
+    }
+  },
+  "layers": [{
+    "id": "simple-tiles",
+    "type": "raster",
+    "source": "raster-tiles",
+    "minzoom": 0,
+    "maxzoom": 22
+  }]
 }
 
 //----------------------------------------------------------------------------
