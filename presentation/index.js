@@ -3,6 +3,7 @@ import React from "react";
 
 // Import Spectacle Core tags
 import {
+  Appear,
   BlockQuote,
   Cite,
   CodePane,
@@ -95,12 +96,14 @@ const location_world = {
 
 const location_nantes = {
   center: [-1.55, 47.216671],
-  zoom: 12.75
+  zoom: 12.75,
+  bearing: 0
 }
 
 const location_mgdesign = {
   center: [-1.556206, 47.20675],
-  zoom: 15.0
+  zoom: 15.0,
+  bearing: 0
 }
 
 const style_default = 'mapbox://styles/mapbox/streets-v9';
@@ -141,7 +144,7 @@ export default class Presentation extends React.Component {
           <Mapboxgl flyTo={location_nantes}/>
         </Slide>
 
-        <Slide transition={["fade"]} bgColor="primary">
+        <Slide transition={["fade"]}>
           <Image src={images.logo_mgd.replace('/', '')} width="80%"/>
           <Heading size={3} textColor="secondary">Nicolas Lelong</Heading>
           <CodePane lang='javascript' source='function toto() {}'></CodePane>
@@ -149,6 +152,41 @@ export default class Presentation extends React.Component {
         </Slide>
 
         <Slide transition={["fade"]} bgColor="primary">
+          <Heading size={3} textColor="tertiary">Mapbox</Heading>
+          <Appear>
+            <Heading size={6} textColor="secondary">Fullstack</Heading>
+          </Appear>
+          <Appear>
+            <Heading size={4} textColor="secondary">Données</Heading>
+          </Appear>
+          <Appear>
+            <Heading size={4} textColor="secondary">Styles</Heading>
+          </Appear>
+          <Appear>
+            <Heading size={4} textColor="secondary">Outils</Heading>
+          </Appear>
+          <Appear>
+            <Heading size={4} textColor="secondary">API</Heading>
+          </Appear>
+        </Slide>
+
+      <Slide transition={["fade"]} bgColor="primary">
+          <Heading size={3} textColor="tertiary">MapboxGL</Heading>
+          <Appear>
+            <Heading size={4} textColor="secondary">Ouvert</Heading>
+          </Appear>
+          <Appear>
+            <BlockQuote>
+              <Quote>Your API will be deprecated very soon</Quote>
+              <Cite>Google</Cite>
+            </BlockQuote>
+          </Appear>
+          <Appear>
+            <Heading size={4} textColor="secondary">WebGL</Heading>
+          </Appear>
+        </Slide>
+
+      <Slide transition={["fade"]} bgColor="primary">
           <Heading size={6} textColor="primary" caps>Typography</Heading>
           <Heading size={1} textColor="secondary">Heading 1</Heading>
           <Heading size={2} textColor="secondary">Heading 2</Heading>
