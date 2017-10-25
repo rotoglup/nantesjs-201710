@@ -394,7 +394,7 @@ export default class Presentation extends React.Component {
           <Heading size={5} textColor="secondary">mapboxgl</Heading>
           <Heading size={3}>Style</Heading>
           <Text>Spécification ouverte</Text>
-          <Text>Sur ... github</Text>
+          <Image src={images.github.replace('/', '')} width="25%"/>
           <Notes>
           * Moins documentée<br/>
           * Cachée derrière les outils<br/>
