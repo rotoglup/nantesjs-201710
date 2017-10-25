@@ -62,7 +62,7 @@ const styles_ex = {
 preloader(images);
 
 let theme = createTheme({
-  primary: "white",
+  primary: "#EEE",
   secondary: "#03A9FC", //"#1F2022",
   tertiary: "CECECE", //"",
   quartenary: "CECECE", //"#"
@@ -122,6 +122,12 @@ const location_world = {
 const location_france = {
   center: [-1.55, 47.216671],
   zoom: 5,
+  bearing: 0
+}
+
+const location_nz = {
+  center: [166.6, -40.4339731],
+  zoom: 4,
   bearing: 0
 }
 
@@ -540,7 +546,7 @@ export default class Presentation extends React.Component {
       { /******************************************************************************/ }
 
       <Slide {...slideProps}>
-      <Mapboxgl flyTo={location_nantes}/>
+      <Mapboxgl flyTo={location_nantes} style={style_streets}/>
       <Heading size={5} textColor="secondary">mapboxgl</Heading>
       <Heading size={3}>Performant</Heading>
       <Text>WebGL</Text>
@@ -550,7 +556,6 @@ export default class Presentation extends React.Component {
     </Slide>
 
     <Slide {...slideProps}>
-      <Mapboxgl flyTo={location_nantes}/>
       <Heading size={5} textColor="secondary">mapboxgl</Heading>
       <Heading size={3}>Algorithmes</Heading>
       <Appear>
@@ -615,15 +620,14 @@ export default class Presentation extends React.Component {
       </Slide>
 
     <Slide {...slideProps}>
+      <Mapboxgl flyTo={location_nz}/>
         <Heading size={3}>Merci !</Heading>
         <Notes>
         * Recrutement !!<br/>
         </Notes>
       </Slide>
 
-      <Slide {...slideProps}>
-        <Image src={images.mgdesign_vendome.replace('/', '')} width="95%"/>
-      </Slide>
+    <Slide/>
 
   { /******************************************************************************/ }
       
