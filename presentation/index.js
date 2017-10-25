@@ -12,6 +12,7 @@ import {
   Image,
   ListItem,
   List,
+  Notes,
   Quote,
   Slide,
   Text
@@ -44,7 +45,19 @@ const images = {
   raster_vs_vector: require("../assets/raster_vs_vector.jpg"),
   chrono: require("../assets/chrono.png"),
   balance: require("../assets/balance.png"),
+  mgdesign_altimetrie: require("../assets/mgdesign_altimetrie.jpg"),
+  mgdesign_lnpn: require("../assets/mgdesign_lnpn.jpg"),
+  mgdesign_vendome: require("../assets/mgdesign_vendome.jpg"),
 };
+
+const styles_ex = {
+  work_base: require("../assets/style_work_base.json"),
+  polygons: require("../assets/style_base_polygons.json"),
+  polygons_filter: require("../assets/style_base_polygons_filter.json"),
+  lignes: require("../assets/style_base_lignes.json"),
+  lignes_labels: require("../assets/style_base_lignes_labels.json"),
+  points: require("../assets/style_base_points.json")
+}
 
 preloader(images);
 
@@ -102,7 +115,14 @@ class Mapboxgl extends React.Component {
 
 const location_world = {
   center: [0, 0],
-  zoom: 1.01
+  zoom: 1.01,
+  bearing: 0
+}
+
+const location_france = {
+  center: [-1.55, 47.216671],
+  zoom: 5,
+  bearing: 0
 }
 
 const location_nantes = {
@@ -119,20 +139,20 @@ const location_mgdesign = {
 
 const location_google = {
   center: [-122.0840782, 37.4220238],
-  zoom: 18.0,
+  zoom: 17.25,
   bearing: 0
 }
 
 const location_mapbox = {
   center: [-122.3999209, 37.7884401],
-  zoom: 19.0,
+  zoom: 17.0,
   bearing: 0
 }
 
 const style_streets = 'mapbox://styles/mapbox/streets-v9';
 const style_basic = 'mapbox://styles/mapbox/basic-v9';
 const style_dark = 'mapbox://styles/mapbox/dark-v9';
-const style_default = style_streets;
+const style_default = style_basic;
 
 const style_raster = {
   "version": 8,
@@ -158,7 +178,8 @@ const style_raster = {
 export default class Presentation extends React.Component {
   render() {
 
-    const slideProps = { transition: ["fade"] }
+    const slideProps = { transition: ["fade"] };
+    const codeProps = { style: { fontSize: "1.4rem"} };
 
     return (
       <Deck transition={["zoom", "slide"]} transitionDuration={500} theme={theme}>
@@ -179,9 +200,9 @@ export default class Presentation extends React.Component {
           <Heading size={3} textColor="secondary">Nicolas Lelong</Heading>
           <Heading size={6}>@rotoglup</Heading>
           <Heading size={6} textColor="primary">spacer</Heading>
-          <CodePane source='void hello(char const* world) { printf("Hello %s", world); }'></CodePane>
-          <CodePane source='def hello(world): print "Hello %s" % world'></CodePane>
-          <CodePane source='function hello(world) { console.log(`Hello ${world}`); }'></CodePane>
+          <CodePane {...codeProps} source='void hello(char const* world) { printf("Hello %s", world); }'></CodePane>
+          <CodePane {...codeProps} source='def hello(world): print "Hello %s" % world'></CodePane>
+          <CodePane {...codeProps} source='function hello(world) { console.log(`Hello ${world}`); }'></CodePane>
           <Appear>
             <Image src={images.logo_mgd.replace('/', '')} width="60%"/>
           </Appear>
@@ -191,19 +212,28 @@ export default class Presentation extends React.Component {
       { /******************************************************************************/ }
 
         <Slide {...slideProps}>
-          <Mapboxgl flyTo={location_world}/>
+          <Mapboxgl flyTo={location_world} style={style_streets}/>
           <Heading size={3}>Pourquoi mapboxgl ?</Heading>
         </Slide>
         <Slide {...slideProps}>
-          <Mapboxgl flyTo={location_google}/>
-          <Heading size={3}>vs. Google (Maps)</Heading>
-          <Appear>
-            <Heading size={5}>Your API will be deprecated very soon</Heading>
-          </Appear>
+          <Mapboxgl flyTo={location_google} style={style_streets}/>
+          <Heading size={3}>Pourquoi pas</Heading>
+          <Heading size={4} textColor="tertiary">Google (Maps) ?</Heading>
+          <Appear><div>
+            <Text>Seulement online</Text>
+            <Text>Entièrement propriétaire/fermé</Text>
+            <Text>"Your API will be deprecated very soon"</Text>
+          </div></Appear>
         </Slide>
         <Slide {...slideProps}>
-          <Mapboxgl flyTo={location_mapbox}/>
+          <Mapboxgl flyTo={location_mapbox} style={style_streets}/>
           <Heading size={3}>mapbox(gl)</Heading>
+          <Appear><div>
+            <Text>Self-hosting possible</Text>
+            <Text>Données, formats, API, code</Text>
+            <Text>Ouverts</Text>
+            <Image src={images.github.replace('/', '')} width="25%"/>
+          </div></Appear>
         </Slide>
 
       { /******************************************************************************/ }
@@ -212,32 +242,54 @@ export default class Presentation extends React.Component {
           <Mapboxgl flyTo={location_world} showTileBoundaries={true}/>
           <Heading size={3}>L'important, c'est la tuile</Heading>
           <Image src={images.tiles_schema.replace('/', '')} width="80%"/>
-          <Text>quadtree</Text>
+          <Text>Le monde découpé en carrés</Text>
+          <Text>"quadtree"</Text>
         </Slide>
+
         <Slide {...slideProps}>
           <Mapboxgl style={style_raster} showTileBoundaries={true}/>
           <Heading size={3}>Tuiles "raster"</Heading>
           <Text>JPG, PNG, 256x256</Text>
+          <Notes>
+            * Depuis ~2004<br/>
+            * Google Maps ; OSM<br/>
+            * Toujours bien utile ; Leaflet<br/>
+            * Images précalculées ou générées sur le serveur<br/>
+            * Démo grand écran<br/>
+          </Notes>
         </Slide>
+
         <Slide {...slideProps}>
-          <Mapboxgl style={style_default} showTileBoundaries={true}/>
+          <Mapboxgl style={style_streets} showTileBoundaries={true}/>
           <Heading size={3}>Tuiles "vecteur"</Heading>
           <Text>GeoJSON, TopoJSON, 'MVT', ...</Text>
           <Image src={images.vector_tile_example.replace('/', '')} width="60%"/>
+          <Notes>
+            * Depuis ~2014<br/>
+            * Google Maps<br/>
+            * Puis Mapbox<br/>
+            * Stockage des formes et données associées<br/>
+            * Style à part<br/>
+            * Démo grand écran<br/>
+          </Notes>
         </Slide>
+
         <Slide {...slideProps}>
-          <Mapboxgl flyTo={location_nantes} style={style_default}/>
+          <Mapboxgl flyTo={location_nantes} style={style_streets}/>
           <Heading size={3}>Tuiles "vecteur"</Heading>
           <Heading size={4} textColor="tertiary">avantages</Heading>
-          <Image src={images.raster_vs_vector.replace('/', '')} width="30%"/>
-          <Text/>
           <Appear><div>
+            <Image src={images.raster_vs_vector.replace('/', '')} width="30%"/>
+            <Text/>
             <Image src={images.balance.replace('/', '')} width="15%"/>
             <Text/>
-          </div></Appear>
-            <Appear><div>
             <Image src={images.chrono.replace('/', '')} width="15%"/>
           </div></Appear>
+          <Notes>
+            * Zoom<br/>
+            * Poids (tuile = 15% plus léger)<br/>
+            * Moins de tuiles, donc moins de temps de génération<br/>
+          </Notes>
         </Slide>
 
       { /******************************************************************************/ }
@@ -246,6 +298,10 @@ export default class Presentation extends React.Component {
           <Heading size={3}>Un peu de contexte</Heading>
           <Heading size={4} textColor="tertiary">mapbox, sans gl</Heading>
           <Image src={images.mapbox.replace('/', '')} width="25%"/>
+          <Notes>
+            * ~500 personnes<br/>
+            * $$$ = services (geocodage, itineraires, hébergement cartes)<br/>
+          </Notes>
         </Slide>
         
         <Slide {...slideProps}>
@@ -260,6 +316,12 @@ export default class Presentation extends React.Component {
             <Text>openmaptiles</Text>
             <Image src={images.openmaptiles.replace('/', '')} width="60%"/>
           </div></Appear>
+          <Notes>
+            * Données tirées de OSM<br/>
+            * Catégorisées pour utilisation 'simple'<br/>
+            * Données perso<br/>
+            * appear / openmaptiles
+            </Notes>
         </Slide>
         
         <Slide {...slideProps}>
@@ -274,12 +336,23 @@ export default class Presentation extends React.Component {
             <Text>maputnik</Text>
             <Image src={images.maputnik.replace('/', '')} width="60%"/>
           </div></Appear>
+          <Notes>
+            * Style = JSON<br/>
+            * Outils desktop d'abord = faile<br/>
+            * Outil en ligne seulement "Studio"<br/>
+            * Appear / maputnik<br/>
+          </Notes>
         </Slide>
         
         <Slide {...slideProps}>
           <Heading size={3}>mapbox</Heading>
           <Heading size={5} textColor="tertiary">Beaucoup de code</Heading>
           <Image src={images.github.replace('/', '')} width="25%"/>
+          <Notes>
+          * Librairies diverses autour de la carto<br/>
+          * ex. Format 'mbtiles'<br/>
+          * ex. Triangulation de polygones<br/>
+          </Notes>
         </Slide>
 
       { /******************************************************************************/ }
@@ -287,107 +360,273 @@ export default class Presentation extends React.Component {
         <Slide {...slideProps}>
           <Heading size={3}>mapbox*gl*</Heading>
           <Heading size={4} textColor="tertiary">enfin !</Heading>
+          <Notes>
+          * Version JS / webgl<br/>
+          * Version Native C++ / OpenGL<br/>
+          </Notes>
         </Slide>
 
         <Slide {...slideProps}>
+          <Heading size={5} textColor="secondary">mapboxgl</Heading>
           <Heading size={3}>API de carto 'classique'</Heading>
           <Appear><div>
             <Text>Contrôle du point de vue</Text>
-          </div></Appear>
-          <Appear><div>
             <Text>Marqueurs et popups</Text>
+            <Text>Sélection 'features'</Text>
+            <Text>Bonne doc, beaucoup d'exemples</Text>
           </div></Appear>
+          <Notes>
+          * Controle du point de vue<br/>
+          * Marqueurs / popup<br/>
+          * Ajout suppression de données<br/>
+          * Bonnes docs sur le site<br/>
+          * Mieux dans leaflet<br/>
+          </Notes>
         </Slide>
 
         <Slide {...slideProps}>
-          <Heading size={3}>Spécification de style</Heading>
-          <Text>Ouverte</Text>
+          <Heading size={5} textColor="secondary">mapboxgl</Heading>
+          <Heading size={3}>Style</Heading>
+          <Text>Spécification ouverte</Text>
           <Text>Sur ... github</Text>
+          <Notes>
+          * Moins documentée<br/>
+          * Cachée derrière les outils<br/>
+          * Idée générale<br/>
+          + sources de données<br/>
+          + calques (filtre + style)<br/>
+          </Notes>
         </Slide>
 
         <Slide {...slideProps}>
-          <Heading size={3}>Exemples</Heading>
-          <Text>Sources</Text>
+          <Mapboxgl flyTo={location_france}/>
+          <Heading size={5} textColor="secondary">Style</Heading>
+          <Heading size={3}>Sources</Heading>
+          <CodePane {...codeProps} lang="javascript" source={`
+"sources": {
+  ...
+  "mapbox-streets": {
+      "type": "vector",
+      "tiles": [
+        "http://a.example.com/tiles/{z}/{x}/{y}.pbf",
+        "http://b.example.com/tiles/{z}/{x}/{y}.pbf"
+      ],
+      "maxzoom": 14
+  }`}/>
+          <Notes>
+          * aussi raster<br/>
+          * vidéo...<br/>
+          </Notes>
         </Slide>
 
         <Slide {...slideProps}>
-          <Heading size={3}>Exemples</Heading>
+        <Mapboxgl style={styles_ex.polygons}/>
+        <Heading size={5} textColor="secondary">Style</Heading>
+        <Heading size={3}>Calques</Heading>
+        <Text>Polygones</Text>
+        <CodePane {...codeProps} lang="javascript" source={`
+"layers": [
+...
+{
+  "id": "landcover",
+  "type": "fill",
+  "source": "mySource",
+  "source-layer": "landcover",
+  "paint": {
+    "fill-color": "#EEE",
+    "fill-outline-color": "#CCC"
+  }
+}`}/>
+          <Text>Les terres en général</Text>
+          <Notes/>
+      </Slide>
+
+      <Slide {...slideProps}>
+          <Mapboxgl style={styles_ex.polygons_filter}/>
+          <Heading size={5} textColor="secondary">Style</Heading>
+          <Heading size={3}>Calques</Heading>
+          <Text>Filtre</Text>
+          <CodePane {...codeProps} lang="javascript" source={`
+{
+  "id": "landcover-wood",
+  ...
+  "filter": [ "==", "class", "wood" ],
+  "paint": {
+    "fill-color": "#B0DEC4"
+  }
+}
+`}/>
+          <Text>La forêt</Text>
+        </Slide>
+
+        <Slide {...slideProps}>
+        <Mapboxgl style={styles_ex.lignes}/>
+        <Heading size={5} textColor="secondary">Style</Heading>
+        <Heading size={3}>Calques</Heading>
+        <Text>Lignes</Text>
+        <CodePane {...codeProps} lang="javascript" source={`
+{
+  "id": "roads-all",
+  "type": "line",
+  "source": "mySource",
+  "source-layer": "road",
+  "paint": {
+    "line-color": "#000"
+  }
+}
+`}/>
+        <Text>Les routes</Text>
+        <Notes/>
+      </Slide>
+
+      <Slide {...slideProps}>
+          <Mapboxgl style={styles_ex.lignes_labels}/>
+          <Heading size={5} textColor="secondary">Style</Heading>
+          <Heading size={3}>Calques</Heading>
+          <Text>Lignes, étiquettes</Text>
+          <CodePane {...codeProps} lang="javascript" source={`
+{
+  "type": "symbol",
+  "layout": {
+    "text-size": 12,
+    "text-max-angle": 30,
+    "symbol-spacing": 250,
+    "symbol-placement": "line",
+    "text-padding": 1,
+    "text-rotation-alignment": "map",
+    "text-field": "{name_en}",
+    "text-letter-spacing": 0.01
+  },
+  ...
+}
+`}/>
+          <Text>Les routes</Text>
+          <Notes/>
+        </Slide>
+
+        <Slide {...slideProps}>
+          <Mapboxgl style={styles_ex.points}/>
+          <Heading size={5} textColor="secondary">Style</Heading>
+          <Heading size={3}>Calques</Heading>
           <Text>Points, symboles</Text>
-        </Slide>
+          <CodePane {...codeProps} lang="javascript" source={`
+{
+"type": "symbol",
+"source-layer": "place_label",
+"layout": {
+  "text-field": "{name_en}",
+  ...
+},
+"paint": {
+  "text-color": "hsl(0, 0%, 0%)",
+  ...
+}
+}
+`}/>
+        <Notes/>
+      </Slide>
 
-        <Slide {...slideProps}>
-          <Heading size={3}>Exemples</Heading>
-          <Text>Lignes</Text>
-        </Slide>
-
-        <Slide {...slideProps}>
-          <Heading size={3}>Exemples</Heading>
-          <Text>Polygones</Text>
-        </Slide>
+      <Slide {...slideProps}>
+        <Heading size={5} textColor="secondary">Style</Heading>
+        <Heading size={3}>Calques</Heading>
+        <Text>Briques 'basiques' à empiler</Text>
+        <Text>Environ 200 pour faire un style complet</Text>
+        <Notes>
+          * Pas satisfaits des outils visuels<br/>
+          * Créé une API simple en JS pour générer des styles<br/>
+        </Notes>
+      </Slide>
 
       { /******************************************************************************/ }
 
-        <Slide transition={["fade"]} bgColor="primary">
-          <Heading size={3} textColor="tertiary">Mapbox</Heading>
-          <Appear>
-            <Heading size={6} textColor="secondary">Fullstack</Heading>
-          </Appear>
-          <Appear>
-            <Heading size={4} textColor="secondary">Données</Heading>
-          </Appear>
-          <Appear>
-            <Heading size={4} textColor="secondary">Styles</Heading>
-          </Appear>
-          <Appear>
-            <Heading size={4} textColor="secondary">Outils</Heading>
-          </Appear>
-          <Appear>
-            <Heading size={4} textColor="secondary">API</Heading>
-          </Appear>
-        </Slide>
+      <Slide {...slideProps}>
+      <Mapboxgl flyTo={location_nantes}/>
+      <Heading size={5} textColor="secondary">mapboxgl</Heading>
+      <Heading size={3}>Performant</Heading>
+      <Text>WebGL</Text>
+      <Text>Web-Workers</Text>
+      <Text>Algorithmes</Text>
+      <Notes/>
+    </Slide>
 
-      <Slide transition={["fade"]} bgColor="primary">
-          <Heading size={3} textColor="tertiary">MapboxGL</Heading>
-          <Appear>
-            <Heading size={4} textColor="secondary">Ouvert</Heading>
-          </Appear>
-          <Appear>
-            <BlockQuote>
-              <Quote>Your API will be deprecated very soon</Quote>
-              <Cite>Google</Cite>
-            </BlockQuote>
-          </Appear>
-          <Appear>
-            <Heading size={4} textColor="secondary">WebGL</Heading>
-          </Appear>
-        </Slide>
+    <Slide {...slideProps}>
+      <Mapboxgl flyTo={location_nantes}/>
+      <Heading size={5} textColor="secondary">mapboxgl</Heading>
+      <Heading size={3}>Algorithmes</Heading>
+      <Appear>
+        <Text>Gestion des 'collisions' entre symboles</Text>
+      </Appear>
+      <Appear>
+        <Text>Placement des textes sur les formes</Text>
+      </Appear>
+      <Appear>
+        <Text>Triangulation polygones</Text>
+      </Appear>
+      <Appear>
+        <Text>webgl - lignes épaisses</Text>
+      </Appear>
+      <Notes/>
+    </Slide>
 
-      <Slide transition={["fade"]} bgColor="primary">
-          <Heading size={6} textColor="primary" caps>Typography</Heading>
-          <Heading size={1} textColor="secondary">Heading 1</Heading>
-          <Heading size={2} textColor="secondary">Heading 2</Heading>
-          <Heading size={3} textColor="secondary">Heading 3</Heading>
-          <Heading size={4} textColor="secondary">Heading 4</Heading>
-          <Heading size={5} textColor="secondary">Heading 5</Heading>
-          <Text size={6} textColor="secondary">Standard text</Text>
-        </Slide>
+      <Slide {...slideProps}>
+        <Mapboxgl flyTo={location_mgdesign}/>
+        <Heading size={5} textColor="secondary">mapboxgl</Heading>
+        <Heading size={3}>Notre utilisation</Heading>
+        <Text>Offline (self-hosted)</Text>
+        <Text>Données custom</Text>
+        <Text>Styles custom</Text>
+        <Text>Mélangé à de la 3D</Text>
+        <Notes/>
+      </Slide>
 
-        <Slide transition={["fade"]} bgColor="primary" textColor="tertiary">
-          <Heading size={6} textColor="secondary" caps>Standard List</Heading>
-          <List>
-            <ListItem>Item 1</ListItem>
-            <ListItem>Item 2</ListItem>
-            <ListItem>Item 3</ListItem>
-            <ListItem>Item 4</ListItem>
-          </List>
-        </Slide>
+      <Slide {...slideProps}>
+      <Image src={images.mgdesign_lnpn.replace('/', '')} width="95%"/>
+    </Slide>
 
-        <Slide transition={["fade"]} bgColor="secondary" textColor="primary">
-          <BlockQuote>
-            <Quote>Example Quote</Quote>
-            <Cite>Author</Cite>
-          </BlockQuote>
-        </Slide>
+      <Slide {...slideProps}>
+        <Image src={images.mgdesign_altimetrie.replace('/', '')} width="95%"/>
+      </Slide>
+
+      <Slide {...slideProps}>
+        <Image src={images.mgdesign_vendome.replace('/', '')} width="95%"/>
+      </Slide>
+
+      <Slide {...slideProps}>
+      <Heading size={5} textColor="secondary">mapboxgl</Heading>
+      <Heading size={3}>Alternatives</Heading>
+      <List>
+        <ListItem>Tangram, par mapzen</ListItem>
+        <ListItem>OpenLayers</ListItem>
+      </List>
+      <Notes>
+      * Tangram = animations, jeune<br/>
+      * OpenLayers = serieux, trop ?<br/>
+      </Notes>
+    </Slide>
+
+    <Slide {...slideProps}>
+        <Heading size={5} textColor="secondary">mapboxgl</Heading>
+        <Heading size={3}>Surcouches</Heading>
+        <List>
+          <ListItem>Deck.gl, par uber</ListItem>
+        </List>
+        <Notes>
+        </Notes>
+      </Slide>
+
+    <Slide {...slideProps}>
+        <Heading size={3}>Merci !</Heading>
+        <Notes>
+        * Recrutement !!<br/>
+        </Notes>
+      </Slide>
+
+      <Slide {...slideProps}>
+        <Image src={images.mgdesign_vendome.replace('/', '')} width="95%"/>
+      </Slide>
+
+  { /******************************************************************************/ }
+      
       </Deck>
     );
   }

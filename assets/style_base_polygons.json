@@ -1,0 +1,31 @@
+{
+  "version": 8,
+  "sources": {
+    "mySource": {
+      "url": "mapbox:\/\/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+      "type": "vector"
+    }
+  },
+  "sprite": "mapbox:\/\/sprites\/mapbox\/streets-v9",
+  "glyphs": "mapbox:\/\/fonts\/mapbox\/{fontstack}\/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#B0C4DE"
+      }
+    },
+    {
+      "id": "landcover",
+      "type": "fill",
+      "source": "mySource",
+      "source-layer": "landcover",
+      "paint": {
+        "fill-color": "#EEE",
+        "fill-outline-color": "#CCC"
+      }
+    }
+  ]
+}
+

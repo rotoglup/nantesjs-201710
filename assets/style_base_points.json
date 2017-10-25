@@ -1,0 +1,195 @@
+{
+  "version": 8,
+  "sources": {
+    "mySource": {
+      "url": "mapbox:\/\/mapbox.mapbox-terrain-v2,mapbox.mapbox-streets-v7",
+      "type": "vector"
+    }
+  },
+  "sprite": "mapbox:\/\/sprites\/mapbox\/streets-v9",
+  "glyphs": "mapbox:\/\/fonts\/mapbox\/{fontstack}\/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#B0C4DE"
+      }
+    },
+    {
+      "id": "landcover",
+      "type": "fill",
+      "source": "mySource",
+      "source-layer": "landcover",
+      "paint": {
+        "fill-color": "#EEE",
+        "fill-outline-color": "#CCC"
+      }
+    },
+    {
+      "id": "landcover-wood",
+      "type": "fill",
+      "source": "mySource",
+      "source-layer": "landcover",
+      "filter": [ "==", "class", "wood" ],
+      "paint": {
+        "fill-color": "#B0DEC4"
+      }
+    },
+    {
+      "id": "roads-all",
+      "type": "line",
+      "source": "mySource",
+      "source-layer": "road",
+      "paint": {
+        "line-color": "#888"
+      }
+    },
+    {
+      "id": "road-label-large",
+      "type": "symbol",
+      "source": "mySource",
+      "source-layer": "road_label",
+      "filter": [
+        "in",
+        "class",
+        "motorway",
+        "primary",
+        "secondary",
+        "tertiary",
+        "trunk"
+      ],
+      "layout": {
+        "text-size": {
+          "base": 1,
+          "stops": [
+            [
+              9,
+              10
+            ],
+            [
+              20,
+              16
+            ]
+          ]
+        },
+        "text-max-angle": 30,
+        "symbol-spacing": 250,
+        "text-font": [
+          "DIN Offc Pro Regular",
+          "Arial Unicode MS Regular"
+        ],
+        "symbol-placement": "line",
+        "text-padding": 1,
+        "text-rotation-alignment": "map",
+        "text-field": "{name_en}",
+        "text-letter-spacing": 0.01
+      },
+      "paint": {
+        "text-color": "hsl(0, 0%, 0%)",
+        "text-halo-color": "hsla(0, 0%, 100%, 0.75)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "place-city-lg-n",
+      "type": "symbol",
+      "metadata": {
+        "mapbox:group": "1444862510685.128"
+      },
+      "source": "mySource",
+      "source-layer": "place_label",
+      "layout": {
+        "icon-image": "dot-11",
+        "text-font": {
+          "base": 1,
+          "stops": [
+            [
+              7,
+              [
+                "DIN Offc Pro Regular",
+                "Arial Unicode MS Regular"
+              ]
+            ],
+            [
+              8,
+              [
+                "DIN Offc Pro Medium",
+                "Arial Unicode MS Regular"
+              ]
+            ]
+          ]
+        },
+        "text-offset": {
+          "base": 1,
+          "stops": [
+            [
+              7.99,
+              [
+                0,
+                -0.25
+              ]
+            ],
+            [
+              8,
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        },
+        "text-anchor": {
+          "base": 1,
+          "stops": [
+            [
+              7,
+              "bottom"
+            ],
+            [
+              8,
+              "center"
+            ]
+          ]
+        },
+        "text-field": "{name_en}",
+        "text-max-width": 7,
+        "text-size": {
+          "base": 0.9,
+          "stops": [
+            [
+              4,
+              12
+            ],
+            [
+              10,
+              22
+            ]
+          ]
+        }
+      },
+      "paint": {
+        "text-color": "hsl(0, 0%, 0%)",
+        "text-opacity": 1,
+        "text-halo-color": "hsl(0, 0%, 100%)",
+        "text-halo-width": 1,
+        "icon-opacity": {
+          "base": 1,
+          "stops": [
+            [
+              7.99,
+              1
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        },
+        "text-halo-blur": 1
+      }
+    }
+  ]
+}
+
